@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
             counterIsActive = true;
             seekBar.setEnabled(false);
-            countdownTimer = new CountDownTimer(i * 1000, 1000) {
+            countdownTimer = new CountDownTimer(i * 1000 + 100, 1000) {
                 long value1 = 0;
                 long value2 = 0;
 
