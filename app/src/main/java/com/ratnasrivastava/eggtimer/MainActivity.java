@@ -3,6 +3,8 @@ package com.ratnasrivastava.eggtimer;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.view.View;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -11,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
     TextView timerTextView;
     SeekBar seekBar;
+    Button goAndStopButton;
     private CountDownTimer countdownTimer;
     private boolean counterIsActive = false;
 
@@ -19,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         timerTextView = (TextView) findViewById(R.id.timerTextView);
+        goAndStopButton = findViewById(R.id.goAndStopButton);
         seekBar = findViewById(R.id.seekbar);
         seekBar.setMax(3599);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -40,10 +44,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateTimer(int i) {
-        if (counterIsActive) {
-            resetTimer();
-        }
-        if (!counterIsActive) {
             int minutes = i / 60;
             int seconds = i % 60;
 
@@ -56,9 +56,24 @@ public class MainActivity extends AppCompatActivity {
             else
                 timerTextView.setText(minutes + ":" + seconds);
 
+
+    }
+
+    private void resetTimer() {
+        countdownTimer.cancel();
+        counterIsActive = false;
+        seekBar.setEnabled(true);
+        goAndStopButton.setText("Go!!");
+    }
+
+    public void startCountDownTimer(View view) {
+        if (counterIsActive) {
+            resetTimer();
+        } else if (!counterIsActive) {
             counterIsActive = true;
             seekBar.setEnabled(false);
-            countdownTimer = new CountDownTimer(i * 1000 + 100, 1000) {
+            goAndStopButton.setText("Stop !!");
+            countdownTimer = new CountDownTimer(seekBar.getProgress() * 1000 + 100, 1000) {
                 long value1 = 0;
                 long value2 = 0;
 
@@ -85,11 +100,5 @@ public class MainActivity extends AppCompatActivity {
                 }
             }.start();
         }
-    }
-
-    private void resetTimer() {
-        countdownTimer.cancel();
-        counterIsActive = false;
-        seekBar.setEnabled(true);
     }
 }
